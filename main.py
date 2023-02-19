@@ -1,16 +1,21 @@
 import logging
-
+import sqlite3
 from aiogram import Dispatcher, Bot, types
 from aiogram.utils import executor
-from aiogram.types import ParseMode
+from aiogram.types import ParseMode, InlineKeyboardMarkup
 from link_filter import Link_filter
 from qr_code import translate_qr_code
 from site_checker import Check_site
+from aiogram.types import InlineKeyboardButton
 
 API_TOKEN = '5618279321:AAHp0qAld0EjJCqmVkdqL2rCG9HibaAjKDY'
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
+
+# con = sqlite3.connect("database.db")
+# cur = con.cursor()
+
 
 # Initialize bot and dispatcher
 bot = Bot(token=API_TOKEN)
@@ -19,6 +24,24 @@ dp.filters_factory.bind(Link_filter)
 url_check = Check_site()
 
 
+# ikb = InlineKeyboardMarkup(row_width=2)
+# btn1 = InlineKeyboardButton(text='👍', callback_data='btn_like')
+# btn2 = InlineKeyboardButton(text='👎', callback_data='btn_dislike')
+# ikb.add(btn1)
+# ikb.add(btn2)
+
+#
+# @dp.callback_query_handler(text='btn_like')
+# async def like(message: types.Message):
+#    #cur.execute("INSERT INTO likes_or_dislikes_sites(user, url, likes, dislikes)"
+#    #            f"VALUES({message.from_user}, {url_check.r.url}, {'likes+1'}, {'dislike+1'})")
+
+
+# @dp.callback_query_handler(text='btn_dislike')
+# async def like(message: types.Message):
+#    await message.answer('sdsadsdsdsadsd')
+#
+#
 @dp.message_handler(commands='start')
 async def send_welcome(message: types.Message):
     await message.answer("Привет!✋")
@@ -30,7 +53,7 @@ async def send_welcome(message: types.Message):
 @dp.message_handler(Link_filter())
 async def message_info_link(message: types.Message):
     await message.reply('сейчас проверим...')
-    await message.answer(check_site(message.text))
+    await message.answer(check_site(message.text))  # , reply_markup=ikb)
 
 
 @dp.message_handler(content_types=['photo'])
@@ -39,6 +62,7 @@ async def message_info_qr_code_link(message: types.Message):
     idfile = await bot.get_file(file_photo)
     dowloaded_file_photo = await bot.download_file(idfile.file_path)
     link = translate_qr_code(dowloaded_file_photo)
+
     await message.answer(link)
     await message.answer(check_site(link), parse_mode=ParseMode.HTML)
 
