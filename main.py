@@ -6,7 +6,6 @@ from aiogram.types import ParseMode, InlineKeyboardMarkup
 from link_filter import Link_filter
 from qr_code import translate_qr_code
 from site_checker import Check_site
-from aiogram.types import InlineKeyboardButton
 
 API_TOKEN = '5618279321:AAHp0qAld0EjJCqmVkdqL2rCG9HibaAjKDY'
 

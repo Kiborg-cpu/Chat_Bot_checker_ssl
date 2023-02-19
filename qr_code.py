@@ -6,7 +6,7 @@ from pyzbar.pyzbar import decode
 def translate_qr_code(image_stream):
     try:
         file_bytes = np.asarray(bytearray(image_stream.read()), dtype=np.uint8)
-        img = cv.imdecode(file_bytes, cv.IMREAD_COLOR)
+        img = cv.imdecode(file_bytes, cv.COLOR_BGR2RGB)
         decoded_data = decode(img)
         # parse the decoded zbar data
         url = decoded_data[0].data.decode()
