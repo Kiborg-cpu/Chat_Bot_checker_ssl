@@ -53,13 +53,11 @@ class SSLUtils:
             context.load_verify_locations(certifi.where())
             print('parsed:', parsed)
             conn.connect((parsed, 443))
-            return ssl.get_server_certificate((parsed, 443))
+            #ssl.get_server_certificate((parsed, 443))
             cert = conn.getpeercert()
-            # pprint.pprint(self.cert)
-            #ssl.match_hostname(cert, dns_name)
-            return True
-        except AttributeError:
-            return False
+            return cert
+        except Exception:
+            return None
 
 # tool = SSLUtils()
 ###cert = tool.fetch_server_certificate_sni('google.com', 443)

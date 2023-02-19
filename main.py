@@ -3,7 +3,6 @@ import logging
 from aiogram import Dispatcher, Bot, types
 from aiogram.utils import executor
 from aiogram.types import ParseMode
-from aiogram.utils.markdown import text, bold, italic, code, pre
 from link_filter import Link_filter
 from qr_code import translate_qr_code
 from site_checker import Check_site
@@ -54,7 +53,13 @@ def check_site(link):
         if url_check.check_redirect(link):
             text += '✅Нет переадресации на другую страницу'
         else:
-            text += '❌Есть переадресация на другую страницу'
+            if len(url_check.r.history) > 1:
+                text += '❌Есть переадресация на другие страницы:\n'
+                for i, response in enumerate(url_check.r.history, 1):
+                    text += f'{i}. {response.url}\n'
+            else:
+                text += '❌Есть переадресация на другую страницу:\n'
+                text += url_check.r.history
         return text
     else:
         return 'Ошибка, возможно вы написали не правильно ссылку, повторите запрос'
