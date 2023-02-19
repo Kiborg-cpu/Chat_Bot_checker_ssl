@@ -1,25 +1,31 @@
-import certifi
 import requests
 
+from ssl_ch import SSLUtils
+import urllib.request
 
 class Check_site:
-    def __init__(self, url):
+    def __init__(self):
+        self.tool = SSLUtils()
+
+    def get_ssl_cert(self, url):
+        return self.tool.fetch_sever_sertificate_x509(url)
+
+    def is_valid(self, url):
         try:
-            print('Проверка ssl сертифика')
-            self.test = requests.get(url, headers={'User-Agent': 'Google Chrome'}, verify=certifi.where(),
-                                     allow_redirects=True)
-            self.has_https = True
-            print('Connection OK.')
-        except requests.exceptions.SSLError as err:
-            print('SSL Error. Adding custom certs to Certifi store...')
-
-    def check_redirect(self):
-        if len(self.test.history) > 1:
+            requests.get(url, timeout=5)
             return True
-        return False
+        except Exception:
+            return False
 
+    def check_redirect(self, url):
+        r = requests.get(url, verify=False)
+        for i, response in enumerate(r.history, 1):
+            print(i, response.url)
+        if len(r.history) > 1:
+            return False
+        return True
 
-k = Check_site('https://www.google.com/url?q=https://en.wikipedia.org/wiki/Turtle&sa=U&ved=0ahUKEwja'
-               '-oaO7u3XAhVMqo8KHYWWCp4QFggVMAA&usg=AOvVaw31hklS09NmMyvgktL1lrTN')
-print(k.check_redirect())
-print(k.test.history)
+# c = Check_site()
+# c.new_url('http://kremlin.ru/')
+# print(c.check_redirect())
+# print(c.test.history)
