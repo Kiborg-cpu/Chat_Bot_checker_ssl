@@ -15,7 +15,7 @@ class Check_site:
     def is_valid(self, url):
         try:
             if 'http' not in url:
-                url = 'http://'+url
+                url = 'http://' + url
 
             a = requests.get(url, headers={'User-Agent': 'Chrome'}, verify=False)
             return True
@@ -25,7 +25,7 @@ class Check_site:
     def check_redirect(self, url):
         if 'http' not in url:
             url = 'http://' + url
-        self.r = requests.get(url,headers={'User-Agent': 'Chrome'}, verify=False)
+        self.r = requests.get(url, headers={'User-Agent': 'Chrome'}, verify=False)
         for i, response in enumerate(self.r.history, 1):
             print(i, response.url)
         if len(self.r.history) > 1:
