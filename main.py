@@ -1,7 +1,7 @@
 import logging
 from aiogram import Dispatcher, Bot, types
 from aiogram.utils import executor
-from aiogram.types import ParseMode
+from aiogram.types import ParseMode, KeyboardButton, ReplyKeyboardMarkup
 from link_filter import Link_filter
 from qr_code import translate_qr_code
 from site_checker import Check_site
@@ -16,13 +16,25 @@ dp = Dispatcher(bot)
 dp.filters_factory.bind(Link_filter)
 url_check = Check_site()
 
+button_question_ssl = KeyboardButton('Что такое ssl сертификат?')
+greet_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+greet_kb.add(button_question_ssl)
+
 
 @dp.message_handler(commands='start')
 async def send_welcome(message: types.Message):
     await message.answer("Привет!✋")
     await message.answer("Я checker_link_bot!")
-    await message.answer("Я могу проверить безопасный ли сайт, который ты хочешь посетить.🛠🛠🛠")
-    await message.answer("Кинь ссылку или QR_code на сайт, если хочешь в этом убедиться.🧐🧐🧐")
+    await message.answer("Я могу проверить ssl сертификат сайта и глянуть куда может переадресовать тебя сайт.🛠🛠🛠")
+    await message.answer("Кинь ссылку или QR_code на сайт, если хочешь в этом убедиться.🧐🧐🧐", reply_markup=greet_kb)
+
+
+@dp.message_handler(text='Что такое ssl сертификат?')
+async def process_hi2_command(message: types.Message):
+    await message.reply("SSL-сертификат – это цифровой сертификат, удостоверяющий подлинность веб-сайта и позволяющий "
+                        "использовать зашифрованное соединение. Аббревиатура SSL означает Secure Sockets Layer – "
+                        "протокол безопасности, создающий зашифрованное соединение между веб-сервером и "
+                        "веб-браузером.")
 
 
 @dp.message_handler(Link_filter())
