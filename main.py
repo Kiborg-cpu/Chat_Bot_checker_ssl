@@ -2,14 +2,18 @@ import logging
 from aiogram import Dispatcher, Bot, types
 from aiogram.utils import executor
 from aiogram.types import ParseMode, KeyboardButton, ReplyKeyboardMarkup
+
+from config import API_TOKEN
 from link_filter import Link_filter
 from qr_code import translate_qr_code
 from site_checker import Check_site
 
-API_TOKEN = '5618279321:AAHp0qAld0EjJCqmVkdqL2rCG9HibaAjKDY'
+# Запускаем логгирование -- запись в логи -- запись в форме таблицы -- отчёт о вып-и пр-мы
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG
+)
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)  # получаем объект логирования = экземпляр класса Logger
 
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
